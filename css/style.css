@@ -166,6 +166,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
   box-shadow: inset 0 -2px 0 var(--accent);
 }
 
+.nav-links a.btn-whatsapp,
+.nav-links a.btn-whatsapp:hover,
+.nav-links a.btn-whatsapp:focus {
+  color: #fff;
+  background: var(--wa);
+  box-shadow: 0 10px 24px rgba(11, 122, 69, 0.35);
+  font-weight: 700;
+}
+
 .nav-cta {
   margin-left: 0.3rem;
   padding: 0.5rem 1rem;
