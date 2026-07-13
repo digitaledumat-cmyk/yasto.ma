@@ -20,14 +20,14 @@
 <meta property="og:title" content="IPTV Maroc | Abonnement HD & 4K — Yasto.ma">
 <meta property="og:description" content="Yasto.ma, fournisseur IPTV Maroc : abonnement HD & 4K, essai gratuit 24h, activation WhatsApp rapide et garantie 45 jours. Packs dès 250 DHS.">
 <meta property="og:url" content="https://yasto.ma/">
-<meta property="og:image" content="https://yasto.ma/assets/hero-tv.jpg">
+<meta property="og:image" content="https://yasto.ma/assets/hero-tv.webp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://yasto.ma/assets/hero-tv.jpg">
+<meta name="twitter:image" content="https://yasto.ma/assets/hero-tv.webp">
 <meta name="twitter:title" content="IPTV Maroc | Abonnement HD & 4K — Yasto.ma">
 <meta name="twitter:description" content="Yasto.ma, fournisseur IPTV Maroc : abonnement HD & 4K, essai gratuit 24h, activation WhatsApp rapide et garantie 45 jours. Packs dès 250 DHS.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/sora-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/figtree-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/hero-tv-960.webp" as="image" type="image/webp" imagesrcset="assets/hero-tv-640.webp 640w, assets/hero-tv-960.webp 960w, assets/hero-tv-1280.webp 1280w" imagesizes="(max-width: 900px) 92vw, 520px" fetchpriority="high">
 <link rel="stylesheet" href="css/style.css">
 
 <script type="application/ld+json">
@@ -39,7 +39,7 @@
       "@id": "https://yasto.ma/#org",
       "name": "Yasto.ma",
       "url": "https://yasto.ma/",
-      "logo": "https://yasto.ma/assets/logo-yasto.png",
+      "logo": "https://yasto.ma/assets/logo-yasto.webp",
       "sameAs": [
         "https://wa.me/212664140211"
       ],
@@ -117,7 +117,7 @@
 <div class="scanlines" aria-hidden="true"></div><header class="site-header">
   <div class="container nav">
     <a class="logo" href="index.html" aria-label="Yasto.ma — Accueil">
-      <img src="assets/logo-yasto.png" width="42" height="42" alt="Logo Yasto.ma" decoding="async">
+      <img src="assets/logo-yasto.webp" width="42" height="42" alt="Logo Yasto.ma" decoding="async">
       Yasto<span>.ma</span>
     </a>
     <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -176,7 +176,10 @@
       </div>
       <div class="hero-visual">
         <div class="hero-tv">
-          <img src="assets/hero-tv.jpg" width="1280" height="853" alt="IPTV Maroc Yasto.ma — TV sport en 4K" decoding="async" fetchpriority="high">
+          <picture>
+            <source type="image/webp" srcset="assets/hero-tv-640.webp 640w, assets/hero-tv-960.webp 960w, assets/hero-tv-1280.webp 1280w" sizes="(max-width: 900px) 92vw, 520px">
+            <img src="assets/hero-tv-960.jpg" srcset="assets/hero-tv-640.jpg 640w, assets/hero-tv-960.jpg 960w, assets/hero-tv-1280.jpg 1280w" sizes="(max-width: 900px) 92vw, 520px" width="960" height="639" alt="IPTV Maroc Yasto.ma — TV sport en 4K" decoding="async" fetchpriority="high">
+          </picture>
           <div class="hero-tv-brand">Yasto<span>.ma</span></div>
         </div>
       </div>
@@ -620,7 +623,7 @@
   <div class="container footer-grid">
     <div class="footer-brand">
       <a class="logo" href="index.html">
-        <img src="assets/logo-yasto.png" width="42" height="42" alt="Yasto.ma" loading="lazy" decoding="async">
+        <img src="assets/logo-yasto.webp" width="42" height="42" alt="Yasto.ma" loading="lazy" decoding="async">
         Yasto<span>.ma</span>
       </a>
       <p>Fournisseur <strong>IPTV Maroc</strong> premium — chaînes live, films &amp; séries en HD / 4K. Activation rapide, support 24/7, garantie 45 jours.</p>

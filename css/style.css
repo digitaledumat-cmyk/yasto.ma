@@ -1,4 +1,37 @@
 /* Yasto.ma — Mediterranean streaming theme (navy + soleil) */
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/figtree-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/figtree-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/sora-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/sora-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --bg: #f3f6fa;
   --bg-elevated: #ffffff;
@@ -9,8 +42,12 @@
   --text-muted: #5b6b7f;
   --border: rgba(15, 28, 46, 0.1);
   --border-strong: rgba(15, 28, 46, 0.18);
-  --accent: #ff5a1f;
-  --accent-hover: #e84a12;
+  /* Darker accent for WCAG AA text contrast on light backgrounds */
+  --accent: #c2410c;
+  --accent-hover: #9a3412;
+  --accent-bright: #ff5a1f;
+  --wa: #0b7a45;
+  --wa-hover: #096b3c;
   --navy: #0f1c2e;
   --sky: #1d9bf0;
   --gold: #f5b942;
@@ -152,7 +189,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .btn:hover { transform: translateY(-2px); }
 
 .btn-primary {
-  background: linear-gradient(135deg, #ff6a33 0%, var(--accent) 55%, #e23a00 100%);
+  background: linear-gradient(135deg, #ea580c 0%, var(--accent) 55%, #9a3412 100%);
   color: #fff;
   box-shadow: 0 10px 28px rgba(255, 90, 31, 0.35);
 }
@@ -175,9 +212,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 .btn-whatsapp {
-  background: #25d366;
+  background: var(--wa);
+  font-weight: 700;
   color: #fff;
-  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.35);
+  box-shadow: 0 10px 24px rgba(11, 122, 69, 0.35);
 }
 
 .btn-whatsapp:hover { color: #fff; filter: brightness(1.05); }
@@ -274,7 +312,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero-copy h1 {
   font-family: var(--font-display);
   font-size: clamp(1.85rem, 4.2vw, 2.85rem);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.12;
   margin: 0 0 0.85rem;
@@ -286,7 +324,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 2.2vw, 1.35rem);
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-bright);
   margin: 0 0 0.85rem;
   letter-spacing: -0.02em;
 }
@@ -406,7 +444,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 .hero-tv-brand span {
-  color: var(--accent);
+  color: var(--accent-bright);
   margin-left: -0.12em;
 }
 
@@ -445,7 +483,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   background: var(--accent);
   color: #fff;
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.9rem;
   margin-bottom: 0.85rem;
 }
@@ -739,7 +777,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .counter .num {
   font-family: var(--font-display);
   font-size: clamp(1.85rem, 4vw, 2.55rem);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
   color: #fff;
   line-height: 1.1;
@@ -856,7 +894,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .price-card.vip .price-features li::before { color: var(--accent); }
 .price-card.vip .price-features strong { color: #fff; }
 .price-card.vip .btn-primary {
-  background: linear-gradient(135deg, #ff6a33, var(--accent));
+  background: linear-gradient(135deg, #ea580c, var(--accent));
   border-color: transparent;
   color: #fff;
 }
@@ -902,7 +940,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .price-amount {
   font-family: var(--font-display);
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
   margin: 0.75rem 0 0.25rem;
   color: var(--navy);
@@ -1257,7 +1295,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   min-height: 48px;
   padding: 0.7rem 1.15rem 0.7rem 0.95rem;
   border-radius: 999px;
-  background: #25d366;
+  background: var(--wa);
   color: #fff;
   display: inline-flex;
   align-items: center;
@@ -1267,7 +1305,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
-  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 8px 28px rgba(11, 122, 69, 0.5);
   transition: transform 0.2s, box-shadow 0.2s;
   animation: waPulse 2.4s ease-in-out infinite;
 }
@@ -1283,13 +1321,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .wa-float:hover {
   transform: translateY(-2px) scale(1.03);
   color: #fff;
-  box-shadow: 0 12px 32px rgba(37, 211, 102, 0.6);
+  box-shadow: 0 12px 32px rgba(11, 122, 69, 0.6);
   animation: none;
 }
 
 @keyframes waPulse {
-  0%, 100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45); }
-  50% { box-shadow: 0 8px 30px rgba(37, 211, 102, 0.7); }
+  0%, 100% { box-shadow: 0 8px 24px rgba(11, 122, 69, 0.45); }
+  50% { box-shadow: 0 8px 30px rgba(11, 122, 69, 0.7); }
 }
 
 @media (prefers-reduced-motion: reduce) {
