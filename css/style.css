@@ -92,8 +92,11 @@ body::after { display: none; }
 .scanlines { display: none !important; }
 
 img { max-width: 100%; height: auto; display: block; }
-a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.15em; transition: color 0.2s; }
 a:hover { color: var(--accent-hover); }
+.btn, .nav-links a, .logo, .wa-float, .footer-col a, .price-card a, .internal-links a {
+  text-decoration: none;
+}
 ul { list-style: none; }
 button, input, select, textarea { font: inherit; color: inherit; }
 
@@ -138,7 +141,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 .logo span {
-  color: var(--accent);
+  color: var(--accent-bright);
   margin-left: -0.14em;
   letter-spacing: -0.04em;
 }
@@ -1261,11 +1264,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
   max-width: 280px;
 }
 
-.footer-col h4 {
+.footer-col .footer-heading {
   font-family: var(--font-display);
   font-size: 0.95rem;
   margin-bottom: 0.85rem;
   color: #fff;
+  font-weight: 700;
 }
 
 .footer-col a {
