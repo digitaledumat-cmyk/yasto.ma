@@ -17,6 +17,40 @@ def asset(path, depth):
     return ("../" * depth) + path
 
 
+def page_url(file_slug: str) -> str:
+    """Map on-disk html path or public path to clean URL: faq.html -> /faq."""
+    s = (file_slug or "").strip()
+    if s in ("index.html", "index", "", "/"):
+        return "/"
+    s = s.lstrip("/")
+    if s.endswith("/"):
+        s = s.rstrip("/")
+    if s.endswith("/index.html"):
+        s = s[: -len("/index.html")]
+    elif s.endswith(".html"):
+        s = s[:-5]
+    return f"/{s}" if s else "/"
+
+
+def canonical_url(file_slug: str) -> str:
+    u = page_url(file_slug)
+    return SITE + "/" if u == "/" else SITE + u
+
+
+def disk_path(slug: str) -> Path:
+    """Map public/legacy slug to on-disk .html path under ROOT."""
+    s = (slug or "").strip().lstrip("/")
+    if s in ("", "index", "index.html"):
+        return ROOT / "index.html"
+    if s in ("blog", "blog/", "blog/index.html"):
+        return ROOT / "blog" / "index.html"
+    if s.endswith("/"):
+        s = s.rstrip("/")
+    if s.endswith(".html"):
+        return ROOT / s
+    return ROOT / f"{s}.html"
+
+
 def head(title, description, canonical, depth=0, extra="", og_type="website"):
     css = asset("css/style.css", depth)
     fav = asset("assets/favicon.png", depth)
@@ -59,20 +93,20 @@ def nav(active, depth=0):
     logo = asset("assets/logo-yasto.png", depth)
     pages = [
         ("index.html", "IPTV Maroc", "accueil"),
-        ("abonnement-iptv.html", "Abonnement IPTV", "abo"),
-        ("guide-installation.html", "Guide d'installation", "guide"),
-        ("faq.html", "FAQ", "faq"),
-        ("blog/index.html", "Blog", "blog"),
-        ("contact.html", "Contact", "contact"),
+        ("/abonnement-iptv", "Abonnement IPTV", "abo"),
+        ("/guide-installation", "Guide d'installation", "guide"),
+        ("/faq", "FAQ", "faq"),
+        ("/blog", "Blog", "blog"),
+        ("/contact", "Contact", "contact"),
     ]
     items = []
     for href, label, key in pages:
         cls = ' class="active"' if key == active else ""
-        items.append(f'<a href="{asset(href, depth)}"{cls}>{label}</a>')
+        items.append(f'<a href="{page_url(href)}"{cls}>{label}</a>')
     links = "\n".join(items)
     return f"""<header class="site-header">
   <div class="container nav">
-    <a class="logo" href="{asset('index.html', depth)}" aria-label="Yasto.ma — Accueil">
+    <a class="logo" href="{page_url('index.html')}" aria-label="Yasto.ma — Accueil">
       <img src="{logo}" width="42" height="42" alt="Logo Yasto.ma" decoding="async">
       Yasto<span>.ma</span>
     </a>
@@ -90,7 +124,7 @@ def footer(depth=0):
     return f"""<footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <a class="logo" href="{asset('index.html', depth)}">
+      <a class="logo" href="{page_url('index.html')}">
         <img src="{logo}" width="42" height="42" alt="Yasto.ma" loading="lazy" decoding="async">
         Yasto<span>.ma</span>
       </a>
@@ -98,27 +132,27 @@ def footer(depth=0):
     </div>
     <div class="footer-col">
       <h4>Navigation</h4>
-      <a href="{asset('index.html', depth)}">IPTV Maroc</a>
-      <a href="{asset('abonnement-iptv.html', depth)}">Abonnement IPTV</a>
-      <a href="{asset('guide-installation.html', depth)}">Guide d'installation</a>
-      <a href="{asset('faq.html', depth)}">FAQ</a>
-      <a href="{asset('blog/index.html', depth)}">Blog</a>
-      <a href="{asset('contact.html', depth)}">Contact</a>
+      <a href="{page_url('index.html')}">IPTV Maroc</a>
+      <a href="{page_url('/abonnement-iptv')}">Abonnement IPTV</a>
+      <a href="{page_url('/guide-installation')}">Guide d'installation</a>
+      <a href="{page_url('/faq')}">FAQ</a>
+      <a href="{page_url('/blog')}">Blog</a>
+      <a href="{page_url('/contact')}">Contact</a>
     </div>
     <div class="footer-col">
       <h4>Légal</h4>
-      <a href="{asset('mentions-legales.html', depth)}">Mentions légales</a>
-      <a href="{asset('conditions-utilisation.html', depth)}">Conditions d'utilisation</a>
-      <a href="{asset('politique-confidentialite.html', depth)}">Confidentialité</a>
-      <a href="{asset('rgpd.html', depth)}">Conformité RGPD</a>
-      <a href="{asset('politique-utilisation-acceptable.html', depth)}">Utilisation acceptable</a>
-      <a href="{asset('dmca.html', depth)}">Politique DMCA</a>
-      <a href="{asset('remboursement.html', depth)}">Remboursement</a>
+      <a href="{page_url('/mentions-legales')}">Mentions légales</a>
+      <a href="{page_url('/conditions-utilisation')}">Conditions d'utilisation</a>
+      <a href="{page_url('/politique-confidentialite')}">Confidentialité</a>
+      <a href="{page_url('/rgpd')}">Conformité RGPD</a>
+      <a href="{page_url('/politique-utilisation-acceptable')}">Utilisation acceptable</a>
+      <a href="{page_url('/dmca')}">Politique DMCA</a>
+      <a href="{page_url('/remboursement')}">Remboursement</a>
     </div>
     <div class="footer-col">
       <h4>Ressources</h4>
-      <a href="{asset('plan-du-site.html', depth)}">Plan du site</a>
-      <a href="{asset('sitemap.html', depth)}">Sitemap HTML</a>
+      <a href="{page_url('/plan-du-site')}">Plan du site</a>
+      <a href="{page_url('/sitemap')}">Sitemap HTML</a>
       <a href="{WA}" target="_blank" rel="noopener noreferrer">WhatsApp {PHONE_DISPLAY}</a>
       <a href="mailto:contact@yasto.ma">contact@yasto.ma</a>
     </div>
@@ -138,11 +172,9 @@ def footer(depth=0):
 
 
 def page(title, description, slug, active, body, depth=0, extra="", og_type="website"):
-    canonical = f"{SITE}/{slug}" if slug != "index.html" else f"{SITE}/"
+    canonical = canonical_url(slug)
     html = head(title, description, canonical, depth, extra, og_type) + nav(active, depth) + body + footer(depth)
-    out = ROOT / slug if depth == 0 else ROOT / slug
-    # slug may be blog/xxx
-    path = ROOT / slug
+    path = disk_path(slug)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(html, encoding="utf-8")
     print("Wrote", path.relative_to(ROOT))
@@ -574,9 +606,9 @@ home_body = f"""
         <p>Installez votre abonnement en quelques minutes et trouvez les réponses aux questions fréquentes.</p>
       </div>
       <div class="hero-actions" style="justify-content:center">
-        <a class="btn btn-primary" href="guide-installation.html">Guide d'installation</a>
-        <a class="btn btn-ghost" href="faq.html">FAQ</a>
-        <a class="btn btn-ghost" href="blog/index.html">Blog SEO</a>
+        <a class="btn btn-primary" href="/guide-installation">Guide d'installation</a>
+        <a class="btn btn-ghost" href="/faq">FAQ</a>
+        <a class="btn btn-ghost" href="/blog">Blog SEO</a>
       </div>
     </div>
   </section>
@@ -607,7 +639,7 @@ abo_body = f"""
       <p>1) Choisissez votre pack · 2) Demandez un test 24h si besoin · 3) Confirmez sur WhatsApp · 4) Recevez vos identifiants et activez sur vos appareils. La <strong>recharge IPTV Maroc</strong> se fait de la même façon à chaque renouvellement.</p>
       <h2>Quel pack choisir ?</h2>
       <p><strong>Pro (250 DHS)</strong> — idéal pour un foyer mono-écran en HD. <strong>Pro+ (350 DHS)</strong> — le meilleur rapport qualité/prix (FHD, 2 appareils, VOD enrichie). <strong>Pro Premium (450 DHS)</strong> — IPTV 4K Maroc, 3 appareils, serveur OTT VPS.</p>
-      <p><a class="btn btn-primary" href="index.html#essai-gratuit" style="margin-top:1rem">Demander un test gratuit</a></p>
+      <p><a class="btn btn-primary" href="/#essai-gratuit" style="margin-top:1rem">Demander un test gratuit</a></p>
     </div>
   </section>
 </main>
@@ -615,7 +647,7 @@ abo_body = f"""
 page(
     "Abonnement IPTV Maroc | Tarifs Pro, Pro+, Premium — Yasto.ma",
     "Achetez un abonnement IPTV Maroc : Pro 250 DHS, Pro+ 350 DHS, Pro Premium 450 DHS. IPTV HD & 4K, garantie 45 jours, support 24/7 WhatsApp.",
-    "abonnement-iptv.html",
+    "/abonnement-iptv",
     "abo",
     abo_body,
 )
@@ -709,7 +741,7 @@ guide_body = f"""
 page(
     "Guide d'installation IPTV Maroc | Smart TV, Android, Fire Stick — Yasto.ma",
     "Guide d'installation IPTV Maroc étape par étape : Android TV, Smart TV, Fire Stick, iOS, PC. Support WhatsApp Yasto.ma 24/7.",
-    "guide-installation.html",
+    "/guide-installation",
     "guide",
     guide_body,
 )
@@ -766,7 +798,7 @@ faq_body = f"""
 page(
     "FAQ IPTV Maroc | Questions fréquentes — Yasto.ma",
     "FAQ IPTV Maroc : test gratuit, prix, multi-écrans, recharge, garantie 45 jours, installation. Réponses du fournisseur Yasto.ma.",
-    "faq.html",
+    "/faq",
     "faq",
     faq_body,
     extra=faq_extra,
@@ -795,7 +827,7 @@ contact_body = f"""
 page(
     "Contact IPTV Maroc | WhatsApp +212 664-140 211 — Yasto.ma",
     "Contactez Yasto.ma pour abonnement IPTV Maroc, test 24h, recharge et support 24/7. WhatsApp +212 664-140 211.",
-    "contact.html",
+    "/contact",
     "contact",
     contact_body,
 )
@@ -825,7 +857,7 @@ def legal_page(slug, active, title, meta, h1, sections):
 
 
 legal_page(
-    "mentions-legales.html", "",
+    "/mentions-legales", "",
     "Mentions légales | Yasto.ma IPTV Maroc",
     "Mentions légales du site Yasto.ma, fournisseur d'abonnement IPTV Maroc.",
     "Mentions légales",
@@ -847,7 +879,7 @@ legal_page(
 )
 
 legal_page(
-    "conditions-utilisation.html", "",
+    "/conditions-utilisation", "",
     "Conditions d'utilisation | Yasto.ma",
     "Conditions générales d'utilisation du service et du site Yasto.ma IPTV Maroc.",
     "Conditions d'utilisation",
@@ -871,7 +903,7 @@ legal_page(
 )
 
 legal_page(
-    "politique-utilisation-acceptable.html", "",
+    "/politique-utilisation-acceptable", "",
     "Politique d'utilisation acceptable | Yasto.ma",
     "Politique d'utilisation acceptable (AUP) du service IPTV Maroc Yasto.ma.",
     "Politique d'utilisation acceptable",
@@ -892,7 +924,7 @@ legal_page(
 )
 
 legal_page(
-    "politique-confidentialite.html", "",
+    "/politique-confidentialite", "",
     "Politique de confidentialité | Yasto.ma",
     "Politique de confidentialité Yasto.ma : données collectées via formulaires et WhatsApp pour IPTV Maroc.",
     "Politique de confidentialité",
@@ -916,7 +948,7 @@ legal_page(
 )
 
 legal_page(
-    "rgpd.html", "",
+    "/rgpd", "",
     "Conformité RGPD | Yasto.ma",
     "Engagements de conformité RGPD / protection des données de Yasto.ma.",
     "Conformité RGPD",
@@ -940,7 +972,7 @@ legal_page(
 )
 
 legal_page(
-    "dmca.html", "",
+    "/dmca", "",
     "Politique DMCA | Yasto.ma",
     "Politique DMCA et signalement de contenus de Yasto.ma.",
     "Politique DMCA",
@@ -961,7 +993,7 @@ legal_page(
 )
 
 legal_page(
-    "remboursement.html", "",
+    "/remboursement", "",
     "Remboursement et retour | Yasto.ma IPTV Maroc",
     "Politique de remboursement 45 jours satisfait ou remboursé — abonnement IPTV Maroc Yasto.ma.",
     "Remboursement et retour",
@@ -986,24 +1018,24 @@ legal_page(
 
 # Plan du site + sitemap html
 sitemap_links = [
-    ("index.html", "Accueil — IPTV Maroc"),
-    ("abonnement-iptv.html", "Abonnement IPTV"),
-    ("guide-installation.html", "Guide d'installation"),
-    ("faq.html", "FAQ"),
-    ("blog/index.html", "Blog"),
-    ("blog/meilleur-iptv-maroc-2026.html", "Meilleur IPTV Maroc 2026"),
-    ("blog/acheter-iptv-maroc-guide.html", "Acheter IPTV Maroc — guide"),
-    ("blog/iptv-4k-maroc.html", "IPTV 4K Maroc"),
-    ("contact.html", "Contact"),
-    ("mentions-legales.html", "Mentions légales"),
-    ("conditions-utilisation.html", "Conditions d'utilisation"),
-    ("politique-utilisation-acceptable.html", "Utilisation acceptable"),
-    ("politique-confidentialite.html", "Confidentialité"),
-    ("rgpd.html", "RGPD"),
-    ("dmca.html", "DMCA"),
-    ("remboursement.html", "Remboursement"),
-    ("plan-du-site.html", "Plan du site"),
-    ("sitemap.html", "Sitemap HTML"),
+    ("/", "Accueil — IPTV Maroc"),
+    ("/abonnement-iptv", "Abonnement IPTV"),
+    ("/guide-installation", "Guide d'installation"),
+    ("/faq", "FAQ"),
+    ("/blog", "Blog"),
+    ("/blog/meilleur-iptv-maroc-2026", "Meilleur IPTV Maroc 2026"),
+    ("/blog/acheter-iptv-maroc-guide", "Acheter IPTV Maroc — guide"),
+    ("/blog/iptv-4k-maroc", "IPTV 4K Maroc"),
+    ("/contact", "Contact"),
+    ("/mentions-legales", "Mentions légales"),
+    ("/conditions-utilisation", "Conditions d'utilisation"),
+    ("/politique-utilisation-acceptable", "Utilisation acceptable"),
+    ("/politique-confidentialite", "Confidentialité"),
+    ("/rgpd", "RGPD"),
+    ("/dmca", "DMCA"),
+    ("/remboursement", "Remboursement"),
+    ("/plan-du-site", "Plan du site"),
+    ("/sitemap", "Sitemap HTML"),
 ]
 links_html = "".join(f'<li><a href="{h}">{t}</a></li>' for h, t in sitemap_links)
 
@@ -1021,7 +1053,7 @@ plan_body = f"""
   </section>
 </main>
 """
-page("Plan du site | Yasto.ma IPTV Maroc", "Plan du site Yasto.ma — toutes les pages IPTV Maroc, blog, FAQ et pages légales.", "plan-du-site.html", "", plan_body)
+page("Plan du site | Yasto.ma IPTV Maroc", "Plan du site Yasto.ma — toutes les pages IPTV Maroc, blog, FAQ et pages légales.", "/plan-du-site", "", plan_body)
 
 sitemap_html_body = f"""
 <main>
@@ -1037,12 +1069,12 @@ sitemap_html_body = f"""
   </section>
 </main>
 """
-page("Sitemap HTML | Yasto.ma", "Sitemap HTML Yasto.ma — index des pages IPTV Maroc pour SEO et navigation.", "sitemap.html", "", sitemap_html_body)
+page("Sitemap HTML | Yasto.ma", "Sitemap HTML Yasto.ma — index des pages IPTV Maroc pour SEO et navigation.", "/sitemap", "", sitemap_html_body)
 
 # Blog index + articles
 articles = [
     {
-        "slug": "meilleur-iptv-maroc-2026.html",
+        "slug": "meilleur-iptv-maroc-2026",
         "title": "Meilleur IPTV Maroc 2026 : comment bien choisir ?",
         "meta": "Guide pour trouver le meilleur IPTV Maroc en 2026 : serveurs, 4K, test gratuit, garantie. Comparatif critères Yasto.ma.",
         "excerpt": "Critères concrets pour sélectionner un fournisseur IPTV Maroc fiable cette année.",
@@ -1056,11 +1088,11 @@ articles = [
 <p>L'<strong>IPTV HD Maroc</strong> suffit souvent en ADSL. L'<strong>IPTV 4K Maroc</strong> demande 25 Mbps+ et une TV UHD. Le pack Pro Premium de Yasto.ma cible ce besoin.</p>
 <h2>4. Garantie &amp; recharge</h2>
 <p>Privilégiez une <strong>garantie 45 jours</strong> et une <strong>recharge IPTV Maroc</strong> simple. C'est le signe d'un service conçu pour la fidélisation (chez nous ~95 % de réabonnement).</p>
-<p><a class="btn btn-primary" href="../abonnement-iptv.html">Voir les tarifs</a> <a class="btn btn-ghost" href="../index.html#essai-gratuit">Test gratuit</a></p>
+<p><a class="btn btn-primary" href="/abonnement-iptv">Voir les tarifs</a> <a class="btn btn-ghost" href="/#essai-gratuit">Test gratuit</a></p>
 """,
     },
     {
-        "slug": "acheter-iptv-maroc-guide.html",
+        "slug": "acheter-iptv-maroc-guide",
         "title": "Acheter IPTV Maroc : le guide complet (prix, packs, activation)",
         "meta": "Comment acheter IPTV Maroc en toute sécurité : packs 250 à 450 DHS, activation WhatsApp, multi-appareils, garantie.",
         "excerpt": "De la demande de test jusqu'à l'activation : le parcours d'achat Yasto.ma.",
@@ -1071,14 +1103,14 @@ articles = [
 <h2>Étape 2 — Test gratuit</h2>
 <p>Demandez un <strong>abonnement IPTV Maroc</strong> à l'essai (24h). Vérifiez football, chaînes MA/FR/ES et la VOD.</p>
 <h2>Étape 3 — Paiement &amp; activation</h2>
-<p>Confirmez sur WhatsApp {PHONE_DISPLAY}. Activation en minutes. Installation via notre <a href="../guide-installation.html">guide</a>.</p>
+<p>Confirmez sur WhatsApp {PHONE_DISPLAY}. Activation en minutes. Installation via notre <a href="/guide-installation">guide</a>.</p>
 <h2>Étape 4 — Recharge</h2>
 <p>La <strong>recharge IPTV Maroc</strong> se fait sur le même fil WhatsApp avant expiration — sans perdre vos favoris.</p>
-<p><a class="btn btn-primary" href="../contact.html">Commander via contact</a></p>
+<p><a class="btn btn-primary" href="/contact">Commander via contact</a></p>
 """,
     },
     {
-        "slug": "iptv-4k-maroc.html",
+        "slug": "iptv-4k-maroc",
         "title": "IPTV 4K Maroc : débit, TV et pack Premium",
         "meta": "Tout savoir sur l'IPTV 4K Maroc : débit Internet, Anti-freeze 2.2, pack Pro Premium Yasto.ma 450 DHS.",
         "excerpt": "Les conditions techniques pour profiter vraiment de l'UHD au Maroc.",
@@ -1090,7 +1122,7 @@ articles = [
 <p>TV 4K + HDMI 2.0 / boîtier récent (Fire Stick 4K, Android TV). Le pack <strong>Pro Premium</strong> Yasto.ma active la résolution 4K UHD et Anti-freeze 2.2 sur serveur OTT VPS.</p>
 <h2>Villes couvertes</h2>
 <p>Service digital pour Casablanca, Marrakech, Rabat, Tanger, Agadir, Fès et partout où Internet le permet — y compris diaspora FR/ES.</p>
-<p><a class="btn btn-primary" href="../abonnement-iptv.html">Pack Pro Premium</a></p>
+<p><a class="btn btn-primary" href="/abonnement-iptv">Pack Pro Premium</a></p>
 """,
     },
 ]
@@ -1101,7 +1133,7 @@ for a in articles:
     <article class="blog-card">
       <div class="thumb" role="presentation"></div>
       <div class="body">
-        <h3><a href="{a['slug']}">{a['title']}</a></h3>
+        <h3><a href="/blog/{a['slug']}">{a['title']}</a></h3>
         <p>{a['excerpt']}</p>
         <div class="blog-meta">IPTV Maroc · Lecture 4 min</div>
       </div>
@@ -1124,7 +1156,7 @@ blog_index = f"""
 page(
     "Blog IPTV Maroc | Guides SEO — Yasto.ma",
     "Blog Yasto.ma : guides pour choisir, acheter et installer un abonnement IPTV Maroc HD/4K.",
-    "blog/index.html",
+    "/blog",
     "blog",
     blog_index,
     depth=1,
@@ -1134,7 +1166,7 @@ for a in articles:
     art_body = f"""
 <main>
   <div class="container page-hero">
-    <span class="eyebrow"><a href="index.html">Blog</a></span>
+    <span class="eyebrow"><a href="/blog">Blog</a></span>
     <h1>{a['title']}</h1>
     <p>{a['excerpt']}</p>
   </div>
@@ -1149,28 +1181,28 @@ for a in articles:
 
 # robots.txt + sitemap.xml
 urls = [
-    ("", "1.0", "daily"),
-    ("abonnement-iptv.html", "0.9", "weekly"),
-    ("guide-installation.html", "0.8", "monthly"),
-    ("faq.html", "0.8", "monthly"),
-    ("contact.html", "0.7", "monthly"),
-    ("blog/", "0.8", "weekly"),
-    ("blog/meilleur-iptv-maroc-2026.html", "0.7", "monthly"),
-    ("blog/acheter-iptv-maroc-guide.html", "0.7", "monthly"),
-    ("blog/iptv-4k-maroc.html", "0.7", "monthly"),
-    ("mentions-legales.html", "0.3", "yearly"),
-    ("conditions-utilisation.html", "0.3", "yearly"),
-    ("politique-confidentialite.html", "0.4", "yearly"),
-    ("politique-utilisation-acceptable.html", "0.3", "yearly"),
-    ("rgpd.html", "0.3", "yearly"),
-    ("dmca.html", "0.3", "yearly"),
-    ("remboursement.html", "0.5", "yearly"),
-    ("plan-du-site.html", "0.4", "monthly"),
-    ("sitemap.html", "0.4", "monthly"),
+    ("/", "1.0", "daily"),
+    ("/abonnement-iptv", "0.9", "weekly"),
+    ("/guide-installation", "0.8", "monthly"),
+    ("/faq", "0.8", "monthly"),
+    ("/contact", "0.7", "monthly"),
+    ("/blog", "0.8", "weekly"),
+    ("/blog/meilleur-iptv-maroc-2026", "0.7", "monthly"),
+    ("/blog/acheter-iptv-maroc-guide", "0.7", "monthly"),
+    ("/blog/iptv-4k-maroc", "0.7", "monthly"),
+    ("/mentions-legales", "0.3", "yearly"),
+    ("/conditions-utilisation", "0.3", "yearly"),
+    ("/politique-confidentialite", "0.4", "yearly"),
+    ("/politique-utilisation-acceptable", "0.3", "yearly"),
+    ("/rgpd", "0.3", "yearly"),
+    ("/dmca", "0.3", "yearly"),
+    ("/remboursement", "0.5", "yearly"),
+    ("/plan-du-site", "0.4", "monthly"),
+    ("/sitemap", "0.4", "monthly"),
 ]
 xml_items = []
 for u, prio, freq in urls:
-    loc = SITE + "/" + u
+    loc = canonical_url(u)
     xml_items.append(f"""  <url>
     <loc>{loc}</loc>
     <changefreq>{freq}</changefreq>

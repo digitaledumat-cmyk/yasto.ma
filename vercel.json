@@ -1,4 +1,6 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/:path*",
@@ -9,6 +11,21 @@
         }
       ],
       "destination": "https://yasto.ma/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/index.html",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/:path*.html",
+      "destination": "/:path*",
       "permanent": true
     }
   ],
@@ -39,7 +56,7 @@
       ]
     },
     {
-      "source": "/(.*).html",
+      "source": "/(.*)\\.html",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
